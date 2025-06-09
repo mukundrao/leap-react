@@ -1,45 +1,31 @@
-import { useState,useEffect } from 'react'
+import { useState,useEffect, useRef } from 'react'
 import './App.css'
-import { TodoList } from './Components/TodoList'
+import TodoList from './Components/TodoList'
+import { useTodo } from './hooks/useTodo'
 function App() {
-  const [todoInput,updateTodoInput] = useState("")
-  const [todoTasks,updateTodoTasks] = useState([])
-  const [loading,updateLoading] = useState(true)
+  //const [todoInput,updateTodoInput] = useState("")
+  // const [todoTasks,updateTodoTasks] = useState([])
+  // const [loading,updateLoading] = useState(true)
 
+  const {todoInput,todoTasks,loading,addTodoInputOnAdd,updateTodoInput,fetchTodosFromApi} = useTodo(); 
   const apiURL = 'https://dummyjson.com/todos?limit=5'
+
+  const ref = useRef(null);
+
   console.log("todoInput", todoInput);
   console.log("todoTasks",todoTasks);
 
-  const addTodoInputOnAdd = ()=>{
-    updateTodoTasks([...todoTasks,todoInput]);
-  }
-
-  const deleteTodoOnClick = (index)=>{
-    const filteredTodos = todoTasks.filter((val,i)=>{
-      return i!=index;
-    })
-    updateTodoTasks(filteredTodos);
-  }
-
-  const saveEditTodo = (val,index)=>{
-    const todoTasksCopy = [...todoTasks];
-    todoTasksCopy[index] = val;
-    updateTodoTasks([...todoTasksCopy]);
-  }
-
-  const fetchTodosFromApi = async (apiURL)=>{
-    const res = await fetch(apiURL);
-    const data = await res.json();
-    console.log(data);
-    const todosFromApi = data.todos.map((val)=>val.todo)
-    console.log("todos from API", todosFromApi)
-    updateTodoTasks(todosFromApi);
-    updateLoading(false)
-  }
+  // const addTodoInputOnAdd = ()=>{
+  //   addTodo(todoInput);
+  //   updateTodoInput("");
+  // }
 
   useEffect(()=>{
     fetchTodosFromApi(apiURL);
   },[])
+
+  ref?.current?.focus();
+  console.log("ref",ref.current)
   
  
   if(loading==true){
@@ -55,11 +41,11 @@ function App() {
     <>
       <h1>Todo App</h1>
       <div id="input-container">
-        <input type="text" onChange={(event)=>{updateTodoInput(event.target.value)}}/>
+        <input ref = {ref} type="text" onChange={(event)=>{updateTodoInput(event.target.value)}}/>
         <button onClick={addTodoInputOnAdd}>Add</button>
       </div>
       <h3>My Todos</h3>
-      <TodoList todoTasks={todoTasks} deleteFunction={deleteTodoOnClick} saveEditFunction={saveEditTodo}/>
+      <TodoList />
       
     </>
   )

@@ -1,11 +1,16 @@
 import { useState } from "react";
-export function TodoItem(props){
-    const {todoName,index, deleteFunction, saveEditFunction} = props;
+import { useTodo } from "../hooks/useTodo";
+import React from "react";
+function TodoItem(props){
+    const {todoName,index} = props;
     const [edit,updateEdit] = useState(false)
     const [newTodo,updatenewTodo] = useState(todoName)
 
+    const {deleteTodoOnClick,saveEditTodo} = useTodo();
+
+
     const editTodo = ()=>{
-        saveEditFunction(newTodo,index);
+        saveEditTodo(newTodo,index);
         updateEdit(false);
     }
     if(edit==false){
@@ -13,7 +18,7 @@ export function TodoItem(props){
         <div>
         <p className="todo-name">{todoName}</p>
         <button onClick={()=>{updateEdit(true)}}>Edit</button>
-        <button onClick={()=>{deleteFunction(index)}}>Delete</button>
+        <button onClick={()=>{deleteTodoOnClick(index)}}>Delete</button>
         </div>
     )
     }
@@ -27,4 +32,6 @@ export function TodoItem(props){
     }
     
 }
+
+export default React.memo(TodoItem);
 
