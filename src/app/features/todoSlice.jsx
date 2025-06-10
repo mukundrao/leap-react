@@ -1,5 +1,15 @@
-import {createSlice} from "@reduxjs/toolkit"
+import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
 
+const apiURL = 'https://dummyjson.com/todos?limit=5'
+export const addApiTodos = createAsyncThunk("addApiTodos", async function(todo){
+    const data = fetch(apiURL,{
+        method:"POST",
+        body:JSON.stringify(todo)
+    });
+
+    const jsonData = await data.json();
+    return jsonData;
+})
 const todoSlice = createSlice({
     name : "todos",
     initialState:{
@@ -28,7 +38,17 @@ const todoSlice = createSlice({
             })
             state.todoTasks = deletedTodos;
         }
+    },
+    extraReducers:(builder)=>{
+        builder.addCase(addApiTodos.fulfilled,function(state,action){
+            console.log("fulfilled",state);
+        }).addCase(addApiTodos.rejected,function(state,action){
+            console.log("rejected",state);
+        }).addCase(addApiTodos.pending,function(state,action){
+            console.log("pending",state);
+        })
     }
+
 })
 
 export const {addTodos,addTodosFromApi,updateLoading,updateTodos,deleteTodos} = todoSlice.actions;

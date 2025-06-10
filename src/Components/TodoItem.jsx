@@ -1,14 +1,21 @@
 import { useState } from "react";
 import { useTodo } from "../hooks/useTodo";
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteTodos,updateTodos } from "../app/features/todoSlice";
+import { useNavigate } from "react-router";
 function TodoItem(props){
-    const {todoName,index} = props;
+    const {index} = props;
+    console.log("index",index);
+    const todoTasks = useSelector((state)=>state.todoTasks);
+    const todoName = todoTasks[index];
     const [edit,updateEdit] = useState(false)
     const [newTodo,updatenewTodo] = useState(todoName)
 
+    
+
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     
     //const {deleteTodoOnClick,saveEditTodo} = useTodo();
 
@@ -22,7 +29,11 @@ function TodoItem(props){
         <div>
         <p className="todo-name">{todoName}</p>
         <button onClick={()=>{updateEdit(true)}}>Edit</button>
-        <button onClick={()=>{dispatch(deleteTodos(index))}}>Delete</button>
+        <button onClick={()=>{
+            dispatch(deleteTodos(index));
+            navigate(-1);
+            }}>Delete</button>
+        <button onClick={()=>{navigate(-1)}}>Go back to Home</button>
         </div>
     )
     }

@@ -8,7 +8,11 @@ import { useSelector,useDispatch } from 'react-redux'
 import {addTodos,addTodosFromApi,updateLoading,updateTodos,deleteTodos} from './app/features/todoSlice'
 import WelcomeCard from './Components/WelcomeCard'
 
-import {BrowserRouter as Router} from 'react-router-dom'
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import { HomePage } from './Pages/Home'
+import { TodoPage } from './Pages/TodoPage'
+import { NotFoundPage } from './Pages/NotFoundPage'
+import { TodoIndividualPage } from './Pages/TodoIndividualPage'
 function App() {
   const [todoInput,updateTodoInput] = useState("")
   // const [todoTasks,updateTodoTasks] = useState([])
@@ -70,14 +74,13 @@ function App() {
     return (
     <>
     <Router>
-      <WelcomeCard name={todoInput}/>
-      <h1>Todo App</h1>
-      <div id="input-container">
-        <input ref = {ref} type="text" onChange={(event)=>{updateTodoInput(event.target.value)}}/>
-        <button onClick={addTodo}>Add</button>
-      </div>
-      <h3>My Todos</h3>
-      <TodoList />
+      <Routes>
+        <Route path="/" element={<HomePage/>}/>
+        <Route path="/todos" element={<TodoPage/>}/>
+        <Route path="/todos/:id" element={<TodoIndividualPage/>}/>
+        <Route path="*" element={<NotFoundPage/>}/> 
+      </Routes>
+      
     </Router>
       
     </>
