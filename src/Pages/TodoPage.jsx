@@ -1,6 +1,6 @@
 import TodoList from "../Components/TodoList"
 import { useSelector,useDispatch } from "react-redux";
-import { addTodos,addTodosFromApi } from "../app/features/todoSlice";
+import { addApiTodos, addTodos,addTodosFromApi } from "../app/features/todoSlice";
 import { useState,useRef,useEffect } from "react";
 export function TodoPage(props){
     const [todoInput,updateTodoInput] = useState("")
@@ -11,6 +11,7 @@ export function TodoPage(props){
     const apiURL = 'https://dummyjson.com/todos?limit=5'
     const addTodo = ()=>{
         dispatch(addTodos(todoInput));
+        dispatch(addApiTodos(todoInput));
       }
     ref?.current?.focus();
     console.log("ref",ref.current)

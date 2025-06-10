@@ -1,15 +1,35 @@
 import {createAsyncThunk, createSlice} from "@reduxjs/toolkit"
+import axios from "axios"
 
-const apiURL = 'https://dummyjson.com/todos?limit=5'
+const addTodoApiURL = 'https://dummyjson.com/todos/add'
 export const addApiTodos = createAsyncThunk("addApiTodos", async function(todo){
-    const data = fetch(apiURL,{
+    const data = await fetch(addTodoApiURL,{
         method:"POST",
-        body:JSON.stringify(todo)
+        headers : {'Content-Type' : 'application/json'},
+        body:JSON.stringify({
+            todo : todo,
+            completed : false,
+            userId: 5
+        })
     });
 
     const jsonData = await data.json();
     return jsonData;
 })
+
+export const updateApiTodos = createAsyncThunk("updateApiTodos", async function(newTodo, index){
+    const data = await fetch(updateTodoApiUrl,{
+        method:"PUT",
+        headers : {'Content-Type':'application/json'},
+        body:JSON.stringify({
+            completed: true
+        })
+    });
+
+    const jsonData = await data.json();
+    return jsonData;
+})
+
 const todoSlice = createSlice({
     name : "todos",
     initialState:{
@@ -41,11 +61,12 @@ const todoSlice = createSlice({
     },
     extraReducers:(builder)=>{
         builder.addCase(addApiTodos.fulfilled,function(state,action){
-            console.log("fulfilled",state);
+            console.log("fulfilled",state,action.payload);
+            state.todoTasks.push(action.payload.todo);
         }).addCase(addApiTodos.rejected,function(state,action){
-            console.log("rejected",state);
+            console.log("rejected",state,action.payload);
         }).addCase(addApiTodos.pending,function(state,action){
-            console.log("pending",state);
+            console.log("pending",state,action.payload);
         })
     }
 
