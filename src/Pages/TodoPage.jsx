@@ -22,6 +22,7 @@ export function TodoPage(props){
     console.log(data);
     const todosFromApi = data.todos.map((val)=>val.todo)
     console.log("todos from API", todosFromApi)
+    console.log("API called")
     dispatch(addTodosFromApi({val:todosFromApi,load:loadingValue}));
     //dispatch(updateLoading(loadingValue))
     //dispatch({type:UPDATE_LOADING,payload:loadingValue});

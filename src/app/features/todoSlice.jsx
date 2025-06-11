@@ -3,18 +3,12 @@ import axios from "axios"
 
 const addTodoApiURL = 'https://dummyjson.com/todos/add'
 export const addApiTodos = createAsyncThunk("addApiTodos", async function(todo){
-    const data = await fetch(addTodoApiURL,{
-        method:"POST",
-        headers : {'Content-Type' : 'application/json'},
-        body:JSON.stringify({
+    const res = await axios.post(addTodoApiURL,{
             todo : todo,
             completed : false,
             userId: 5
-        })
-    });
-
-    const jsonData = await data.json();
-    return jsonData;
+        });
+    return res.data;
 })
 
 export const updateApiTodos = createAsyncThunk("updateApiTodos", async function(newTodo, index){
